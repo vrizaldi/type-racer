@@ -1,7 +1,15 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.Label?>
 <StackPane fx:controller="crayon.typeracer.client.ClientController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <Text text="CLIENT" />
+    <VBox>
+        <Text text="CLIENT" />
+        <HBox>
+            <Label text="Ip address" />
+        </HBox>
+    </VBox>
 </StackPane>

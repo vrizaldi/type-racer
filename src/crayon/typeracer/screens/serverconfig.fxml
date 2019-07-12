@@ -6,9 +6,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 
-<StackPane fx:controller="crayon.typeracer.server.ServerController"
+<StackPane fx:id="serverScreen" fx:controller="crayon.typeracer.server.ServerController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <VBox>
+    <VBox fx:id="serverConfig">
         <Text text="SERVER CONFIG" />
         <HBox id="server-port-input">
             <Label text="Port" />

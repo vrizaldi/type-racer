@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 /** Listens to a player in server
  *  each player has a PlayerListener attached
@@ -23,9 +24,11 @@ public class PlayerListener implements Runnable {
 
     // INGAME STATE
     private String username;
-    private float progress;
+    private int progress;
 
     public PlayerListener(@NotNull Socket client, int id, ServerController controller) {
+
+        System.out.println("Player " + id + " connected from " + client.getRemoteSocketAddress());
 
         this.controller = controller;
 
@@ -46,15 +49,16 @@ public class PlayerListener implements Runnable {
 
     @Override
     public void run() {
-        while(this.client.isClosed() == false) {
+        while(this.connected) {
             try {
                 parseData(this.in.readLine());
+            } catch(SocketException e) {
+                this.connected = false;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        this.connected = false;
     }
 
     private void parseData(String data) {
@@ -63,5 +67,27 @@ public class PlayerListener implements Runnable {
 
     public void sendData(String data) {
         out.println(data);
+    }
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+
+    public void incProgress() {
+        this.progress++;
+    }
+
+    public int getProgress() {
+        return this.progress;
+    }
+
+    public Socket getClient() {
+        return client;
     }
 }

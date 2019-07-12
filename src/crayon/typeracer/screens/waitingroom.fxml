@@ -10,7 +10,7 @@
 <StackPane fx:controller="crayon.typeracer.server.ServerController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
     <VBox>
-        <TextArea fx:id="playerList" id="player-list" editable="false" />
+        <TextArea text="tttt" fx:id="playerList" id="player-list" editable="false" />
         <Button text="Start game" onAction="#startGame"/>
     </VBox>
 </StackPane>
