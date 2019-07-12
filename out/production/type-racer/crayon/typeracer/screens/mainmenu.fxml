@@ -1,0 +1,12 @@
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:controller="crayon.typeracer.MainMenuController"
+           xmlns:fx="http://javafx.com/fxml" alignment="center">
+    <VBox id="menu">
+        <Button text="Start SERVER" onAction="#showServerConfig" />
+        <Button text="Start CLIENT" onAction="#showClientConfig" />
+        <Button text="Exit" onAction="#exitGame" />
+    </VBox>
+</StackPane>

@@ -1,0 +1,7 @@
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
+
+<StackPane fx:controller="crayon.typeracer.client.ClientController"
+           xmlns:fx="http://javafx.com/fxml" alignment="center">
+    <Text text="CLIENT CONFIG"/>
+</StackPane>
