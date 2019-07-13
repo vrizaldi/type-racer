@@ -56,9 +56,8 @@ public class ServerController extends FXController {
         this.waitingScreen.getChildren().add(new Text("WAITINGROOM"));
 
         // create playerList text area
-        String playerListTxt =
-                "Opened a connection on " + this.serverSocket.getLocalSocketAddress();
-        this.playerList = new TextArea(playerListTxt);
+        this.playerList = new TextArea();
+        this.updatePlayerList();
         this.playerList.setEditable(false);
         this.playerList.setFocusTraversable(false);
         this.waitingScreen.getChildren().add(playerList);
@@ -91,12 +90,7 @@ public class ServerController extends FXController {
 
                         players.put(playerCount++, player);
 
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                updatePlayerList();
-                            }
-                        });
+                        updatePlayerList();
 
                     } catch (IOException e) {
                        // finished looking for player
@@ -126,24 +120,38 @@ public class ServerController extends FXController {
     public void disconnect(int id) {
         this.players.remove(id);
 
-        Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    updatePlayerList();
-                }
-            });
+        updatePlayerList();
     }
 
     public void updatePlayerList() {
-        String playerListTxt =
-                "Opened a connection on " + serverSocket.getLocalSocketAddress() + "\n";
-            Object[] playerArr = players.values().toArray();
-            for(int i = 0; i < playerArr.length; i++) {
-
-                playerListTxt += ((PlayerListener)playerArr[i]).getClient().getRemoteSocketAddress() +" connected\n";
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                String playerListTxt =
+                    "Opened a connection on " + serverSocket.getLocalSocketAddress() + "\n";
+                Object[] playerArr = players.values().toArray();
+                playerListTxt += countIdentified(playerArr) + "/" + playerArr.length + " players identified:\n";
+                for(int i = 0; i < playerArr.length; i++) {
+                    PlayerListener player = (PlayerListener)playerArr[i];
+                    if(player.getUsername().isEmpty())
+                        playerListTxt += player.getClient().getRemoteSocketAddress() + " unidentified\n";
+                    else
+                        playerListTxt += player.getUsername() + " (" + player.getClient().getRemoteSocketAddress()
+                            + ")\n";
+                }
+                playerList.setText(playerListTxt);
             }
-            playerList.setText(playerListTxt);
+        });
 
+    }
+
+    private int countIdentified(Object[] playerArr) {
+        int count = 0;
+        for(int i = 0; i < playerArr.length; i++) {
+            if(((PlayerListener)playerArr[i]).getUsername().isEmpty()) continue;
+            else count++;
+        }
+        return count;
     }
 
 

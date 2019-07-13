@@ -45,6 +45,8 @@ public class PlayerListener implements Runnable {
             System.exit(e.hashCode());
         }
 
+        this.username = "";
+        this.progress = 0;
     }
 
     @Override
@@ -76,6 +78,7 @@ public class PlayerListener implements Runnable {
             }
             this.username = this.username.trim();
             System.out.println(this.client.getRemoteSocketAddress() + " identified as " + this.username);
+            controller.updatePlayerList();
         }
     }
 
