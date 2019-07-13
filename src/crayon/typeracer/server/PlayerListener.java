@@ -86,6 +86,9 @@ public class PlayerListener implements Runnable {
             this.username = this.username.trim();
             System.out.println(this.client.getRemoteSocketAddress() + " identified as " + this.username);
             controller.updatePlayerList();
+
+            // reply with its id
+            sendData("id " + this.id);
         }
     }
 
@@ -100,6 +103,8 @@ public class PlayerListener implements Runnable {
             e.printStackTrace();
         }
     }
+
+    public int getId() {return id;}
 
     public void sendData(String data) {
         out.println(data);

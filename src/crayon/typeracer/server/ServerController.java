@@ -194,6 +194,7 @@ public class ServerController extends FXController {
             if(from > 0) {
                 // still counting down
                 broadcast("count " + from);
+                dataView.setText(String.valueOf(from));
 
                 Timer counter = new Timer();
                 counter.schedule(new TimerTask() {
@@ -206,9 +207,25 @@ public class ServerController extends FXController {
             } else {
                 // start the game
                 broadcast("start " + challenge);
+
+                // show score on dataView
+                updateScore();
             }
         }
 
+    }
+
+    private void updateScore() {
+
+        String scoreboardServer = "Current Scoreboard:\n";
+        String scoreboardClient = "scoreboard ";
+        for(Integer key : players.keySet()) {
+            PlayerListener player = players.get(key);
+            scoreboardServer += player.getUsername() + "\t\t" + player.getProgress() + "/" + challenge.length() + "\n";
+            scoreboardClient += player.getId() + " " + player.getProgress() + " ";  // player's id progress separated by space
+        }
+        dataView.setText(scoreboardServer);
+        broadcast(scoreboardClient);
     }
 
 
@@ -236,6 +253,7 @@ public class ServerController extends FXController {
 
     // ON PROGRAM EXIT
     public void stop() {
+        System.out.println("Exiting program...");
         try {
             if(serverSocket != null) serverSocket.close();
             this.players.forEach((key, player) -> {

@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.fxmisc.richtext.InlineCssTextArea;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.HashMap;
 
 
 public class ClientController extends FXController {
@@ -39,7 +41,9 @@ public class ClientController extends FXController {
     private TextField username;
 
     private boolean listening;
-    private Thread listenThread;
+    private int id;
+    private String challenge;
+    private HashMap<Integer, Player> players;
 
     public void connect() {
         // connect to specified ip and port
@@ -58,7 +62,7 @@ public class ClientController extends FXController {
 
     private void switchToEnterName() {
         // clear screen
-        clientScreen.getChildren().remove(clientConfig);
+        clearScreen();
 
         /// create VBox to contain all
         clientEnterName = new VBox();
@@ -90,8 +94,7 @@ public class ClientController extends FXController {
 
         // start to listen to update
         listening = true;
-        listenThread = new Thread(() -> listenToUpdate());
-        listenThread.start();
+        new Thread(() -> listenToUpdate()).start();
     }
 
     private void listenToUpdate() {
@@ -122,12 +125,24 @@ public class ClientController extends FXController {
         }
         System.out.println("Received: " + data);
         String[] args = data.split(" ");
-        if(args[0].equals("count")) {
+        if(args[0].equals("id")) {
+            this.id = Integer.parseInt(args[1]);    // update id
+
+        } else if(args[0].equals("count")) {
             // show countdown
             Platform.runLater(() -> {
                 clearScreen();
                 clientScreen.getChildren().add(new Text(args[1]));
             });
+
+        } else if(args[0].equals("start")) {
+            System.out.println("Starting game...");
+            this.challenge = data.substring(args[0].length() + 1);  // the rest is the challenge
+            System.out.println("Challenge: " + challenge);
+            switchToGame();
+
+        } else if(args[0].equals("scoreboard")) {
+            parseScoreboard(args);
 
         } else if(args[0].equals("reset")) {
             // clear screen
@@ -135,6 +150,32 @@ public class ClientController extends FXController {
                 switchToEnterName();
             });
         }
+    }
+
+    private void parseScoreboard(String[] args) {
+        for(int i = 1; i < args.length; i = i + 2) {
+            System.out.println("parsing " + args[i] + " " + args[i + 1]);
+            if(players.containsKey(Integer.valueOf(args[i]))) {
+                // players already exist in scoreboard
+                players.get(Integer.valueOf(args[i])).updateProgress(args[i + 1]);
+            } else {
+                players.put(Integer.valueOf(args[i]), new Player(Integer.parseInt(args[i + 1])));
+            }
+        }
+
+        System.out.println("Parsed scoreboard: ");
+        players.forEach((key, player) -> {
+            System.out.println(player.getId() + " " + player.getProgress());
+        });
+    }
+
+
+    // INGAME
+    private void switchToGame() {
+        players = new HashMap<>();
+        Platform.runLater(() -> {
+            clearScreen();
+        });
     }
 
     private void handleDisconnect() {
