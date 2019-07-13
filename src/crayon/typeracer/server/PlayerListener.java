@@ -68,7 +68,7 @@ public class PlayerListener implements Runnable {
         if(data == null) {
             try {
                 if(in.read() == -1) handleDisconnect();
-                else return;
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,6 +94,11 @@ public class PlayerListener implements Runnable {
         System.out.println("Player " + id + " disconnected");
         this.controller.disconnect(this.id);
         this.connected = false;
+        try {
+            this.client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendData(String data) {

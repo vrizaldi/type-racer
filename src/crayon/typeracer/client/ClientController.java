@@ -112,6 +112,14 @@ public class ClientController extends FXController {
     }
 
     private void parseData(String data) {
+        if(data == null) {
+            try {
+                if(in.read() == -1) handleDisconnect();
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println("Received: " + data);
         String[] args = data.split(" ");
         if(args[0].equals("count")) {
@@ -127,6 +135,18 @@ public class ClientController extends FXController {
                 switchToEnterName();
             });
         }
+    }
+
+    private void handleDisconnect() {
+        // handle disconnect
+        // go back to main menu
+        this.listening = false;
+        try {
+            this.client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.sceneController.switchTo("mainmenu");
     }
 
     private void clearScreen() {
