@@ -14,7 +14,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Scene scene = new Scene(new Pane(), 300, 275);
-        SceneController sceneController = new SceneController(scene);
+        sceneController = new SceneController(scene);
         loadScreens(sceneController);
         sceneController.switchTo("mainmenu");   // load mainmenu
 
@@ -32,6 +32,10 @@ public class Main extends Application {
         }
     }
 
+    @Override
+    public void stop() {
+        sceneController.stop();
+    }
 
     public static void main(String[] args) {
         launch(args);

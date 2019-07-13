@@ -1,5 +1,6 @@
 package crayon.typeracer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.fxml.FXMLLoader;
@@ -10,18 +11,21 @@ public class SceneController {
 
     private Scene main;
     private HashMap<String, Pane> roots;
+    private ArrayList<FXController> controllers;
     private String currentRoot = "";
 
     SceneController(Scene main) {
         this.main = main;
         roots = new HashMap<String, Pane>();
+        controllers = new ArrayList<>();
     }
 
     void addScreen(String name, FXMLLoader loader) {
         try {
             this.roots.put(name, loader.load());
             FXController controller = loader.getController();
-            ((FXController)loader.getController()).setSceneController(this);
+            controller.setSceneController(this);
+            controllers.add(controller);
             System.out.println("added " + name + " " + roots.get(name).toString());
         } catch(Exception e) {
             e.printStackTrace();
@@ -44,5 +48,11 @@ public class SceneController {
 
     public String getCurrentRoot() {
         return this.currentRoot;
+    }
+
+    public void stop() {
+        this.controllers.forEach((controller) -> {
+            controller.stop();
+        });
     }
 }

@@ -14,12 +14,15 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ServerController extends FXController {
 
     private ServerSocket serverSocket;
-    private ArrayList<PlayerListener> players = new ArrayList<PlayerListener>();
+    private HashMap<Integer, PlayerListener> players = new HashMap<>();
     private int playerCount;
+    private boolean waitForPlayer;
 
     @FXML
     StackPane serverScreen;
@@ -56,6 +59,8 @@ public class ServerController extends FXController {
         String playerListTxt =
                 "Opened a connection on " + this.serverSocket.getLocalSocketAddress();
         this.playerList = new TextArea(playerListTxt);
+        this.playerList.setEditable(false);
+        this.playerList.setFocusTraversable(false);
         this.waitingScreen.getChildren().add(playerList);
 
         // create start game button
@@ -68,11 +73,12 @@ public class ServerController extends FXController {
         // wait for players to connect
         this.playerCount = 0;
         ServerController controller = this;     // to be used inside anon class
+        this.waitForPlayer = true;
         Runnable openCon = new Runnable() {
             @Override
             public void run() {
                 // keep looking for player until closed
-                while(true) {
+                while(waitForPlayer) {
                     try {
                         // attach PlayerListener to the connected player
                         System.out.println("Waiting for players...");
@@ -83,24 +89,19 @@ public class ServerController extends FXController {
                         Thread thread = new Thread(player);
                         thread.start();
 
-                        players.add(player);
-                        playerCount++;
+                        players.put(playerCount++, player);
 
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                             String playerListTxt =
-                                    "Opened a connection on " + serverSocket.getLocalSocketAddress() + "\n";
-                                for(int i = 0; i < playerCount; i++) {
-                                    playerListTxt += players.get(i).getClient().getRemoteSocketAddress()
-                                            +" connected\n";
-                                }
-                                playerList.setText(playerListTxt);
+                                updatePlayerList();
                             }
                         });
 
                     } catch (IOException e) {
                        // finished looking for player
+                        System.out.println("Stop waiting for players...");
+                        waitForPlayer = false;
                     }
                 }
             }
@@ -120,5 +121,38 @@ public class ServerController extends FXController {
 
         // switch to game
         this.sceneController.switchTo("server");
+    }
+
+    public void disconnect(int id) {
+        this.players.remove(id);
+
+        Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    updatePlayerList();
+                }
+            });
+    }
+
+    public void updatePlayerList() {
+        String playerListTxt =
+                "Opened a connection on " + serverSocket.getLocalSocketAddress() + "\n";
+            Object[] playerArr = players.values().toArray();
+            for(int i = 0; i < playerArr.length; i++) {
+
+                playerListTxt += ((PlayerListener)playerArr[i]).getClient().getRemoteSocketAddress() +" connected\n";
+            }
+            playerList.setText(playerListTxt);
+
+    }
+
+
+    public void stop() {
+        try {
+            if(serverSocket != null) serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(e.hashCode());
+        }
     }
 }

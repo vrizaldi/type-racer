@@ -8,4 +8,8 @@ public class FXController {
     public void setSceneController(SceneController sceneController) {
         this.sceneController = sceneController;
     }
+
+    public void stop() {
+
+    }
 }

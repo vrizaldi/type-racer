@@ -52,7 +52,10 @@ public class PlayerListener implements Runnable {
         while(this.connected) {
             try {
                 parseData(this.in.readLine());
+
             } catch(SocketException e) {
+                // player disconnected
+                this.controller.disconnect(this.id);
                 this.connected = false;
 
             } catch (IOException e) {
@@ -63,6 +66,17 @@ public class PlayerListener implements Runnable {
 
     private void parseData(String data) {
         System.out.println(data);
+        String[] args = data.split(" ");
+        if(args[0].equalsIgnoreCase("username")) {
+            // identify as given username
+            // all strings after "username" are taken as name
+            this.username = "";
+            for(int i = 1; i < args.length; i++) {
+                username += args[i] + " ";
+            }
+            this.username = this.username.trim();
+            System.out.println(this.client.getRemoteSocketAddress() + " identified as " + this.username);
+        }
     }
 
     public void sendData(String data) {
