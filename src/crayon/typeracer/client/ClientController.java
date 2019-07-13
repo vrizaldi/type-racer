@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.fxmisc.richtext.InlineCssTextArea;
 
 import java.io.BufferedReader;
@@ -39,6 +40,9 @@ public class ClientController extends FXController {
 
     private VBox clientEnterName;
     private TextField username;
+
+    private Text typed;
+    private Text untyped;
 
     private boolean listening;
     private int id;
@@ -175,6 +179,15 @@ public class ClientController extends FXController {
         players = new HashMap<>();
         Platform.runLater(() -> {
             clearScreen();
+
+            TextFlow textFlow = new TextFlow();
+            typed = new Text();
+            untyped = new Text();
+            textFlow.getChildren().addAll(typed, untyped);
+            this.clientScreen.getChildren().add(textFlow);
+
+            updateScoreboard();
+            updateChallenge();
         });
     }
 
@@ -192,6 +205,17 @@ public class ClientController extends FXController {
 
     private void clearScreen() {
         clientScreen.getChildren().removeAll(clientScreen.getChildren());
+    }
+
+    private void updateScoreboard() {
+    }
+
+    private void updateChallenge() {
+        int progress = this.players.get(this.id).getProgress();
+        if(progress > 0) typed.setText(challenge.substring(0, progress));
+        else typed.setText("");
+
+        typed.setText(challenge.substring(progress));
     }
 
     @Override
