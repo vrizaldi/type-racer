@@ -56,9 +56,7 @@ public class PlayerListener implements Runnable {
                 parseData(this.in.readLine());
 
             } catch(SocketException e) {
-                // player disconnected
-                this.controller.disconnect(this.id);
-                this.connected = false;
+                handleDisconnect();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -67,7 +65,16 @@ public class PlayerListener implements Runnable {
     }
 
     private void parseData(String data) {
-        System.out.println(data);
+        if(data == null) {
+            try {
+                if(in.read() == -1) handleDisconnect();
+                else return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Received: " + data);
         String[] args = data.split(" ");
         if(args[0].equalsIgnoreCase("username")) {
             // identify as given username
@@ -80,6 +87,13 @@ public class PlayerListener implements Runnable {
             System.out.println(this.client.getRemoteSocketAddress() + " identified as " + this.username);
             controller.updatePlayerList();
         }
+    }
+
+    private void handleDisconnect() {
+        // player disconnected
+        System.out.println("Player " + id + " disconnected");
+        this.controller.disconnect(this.id);
+        this.connected = false;
     }
 
     public void sendData(String data) {
@@ -106,5 +120,14 @@ public class PlayerListener implements Runnable {
 
     public Socket getClient() {
         return client;
+    }
+
+    public void stop() {
+        this.connected = false;
+        try {
+            this.client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

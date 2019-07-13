@@ -21,9 +21,10 @@ public class ServerController extends FXController {
 
     private ServerSocket serverSocket;
     private HashMap<Integer, PlayerListener> players = new HashMap<>();
-    private int playerCount;
+    private int playerCount = 0;
     private boolean waitForPlayer;
     private boolean isIngame;
+    private String challenge;       // the string to be typed
 
     @FXML
     StackPane serverScreen;
@@ -37,7 +38,12 @@ public class ServerController extends FXController {
     Button gameToggle;
 
     // SERVERCONFIG SCREEN
-    public void openConnection(ActionEvent actionEvent) {
+    public void openConnection(ActionEvent e) {
+        this.playerCount = 0;
+        this.switchToWaitingRoom();
+    }
+
+    private void switchToWaitingRoom() {
         // open a connection
         try {
             System.out.println("Opening a connection...");
@@ -46,8 +52,8 @@ public class ServerController extends FXController {
             e.printStackTrace();
         }
 
-         // clear screen
-        System.out.println(serverScreen.getChildren().remove(serverConfig));
+        // clear screen
+        clearscreen();
 
         // create the waiting room screen
         // create VBox to hold all
@@ -65,16 +71,13 @@ public class ServerController extends FXController {
         this.waitingScreen.getChildren().add(dataView);
 
         // create start game button
-        gameToggle = new Button("Start Game");
-        gameToggle.setOnAction((e) -> {
-            startGame(e);
-        });
+        gameToggle = new Button("Enter Challenge");
+        gameToggle.setOnAction(this::enterChallenge);
         this.waitingScreen.getChildren().add(gameToggle);
 
         isIngame = false;
 
         // wait for players to connect
-        this.playerCount = 0;
         ServerController controller = this;     // to be used inside anon class
         this.waitForPlayer = true;
         Runnable openCon = new Runnable() {
@@ -110,7 +113,8 @@ public class ServerController extends FXController {
 
 
     // WAITINGROOM SCREEN
-    public void startGame(ActionEvent actionEvent) {
+    public void enterChallenge(ActionEvent actionEvent) {
+        // switch to screen where server can enter challenge
         // stop waiting for player
         try {
             this.serverSocket.close();
@@ -118,14 +122,16 @@ public class ServerController extends FXController {
             e.printStackTrace();
         }
 
-        // change start game to stop game on button
-        gameToggle.setText("Stop Game");
+        // allow textarea to be edited
+        dataView.setEditable(true);
+        dataView.setFocusTraversable(true);
+        dataView.setText("THIS WILL BE THE TEXT TO BE TYPED");
 
-        dataView.setText("Game started");
-        isIngame = true;
-        countDown(3);
-
+        // edit the button
+        gameToggle.setText("Start Game");
+        gameToggle.setOnAction(this::startGame);
     }
+
 
     public void updatePlayerList() {
         Platform.runLater(new Runnable() {
@@ -159,7 +165,27 @@ public class ServerController extends FXController {
     }
 
 
+    // ENTER CHALLENGE SCREEN
+    public void startGame(ActionEvent actionEvent) {
+        // change start game to stop game on button
+        gameToggle.setText("Stop Game");
+        gameToggle.setOnAction(this::stopGame);
+
+        // save challenge
+        this.challenge = dataView.getText();
+
+        dataView.setText("Game started");
+        isIngame = true;
+        countDown(3);
+    }
+
     // IN GAME
+    private void stopGame(ActionEvent e) {
+        isIngame = false;
+        switchToWaitingRoom();
+        broadcast("reset");
+    }
+
     private void countDown(int from) {
         if(isIngame) {
             if(from > 0) {
@@ -176,10 +202,16 @@ public class ServerController extends FXController {
 
             } else {
                 // start the game
-                broadcast("clearscreen");
+                broadcast("start " + challenge);
             }
         }
 
+    }
+
+
+    // UTIL
+    private void clearscreen() {
+        serverScreen.getChildren().remove(serverScreen.getChildren());
     }
 
 
@@ -203,6 +235,9 @@ public class ServerController extends FXController {
     public void stop() {
         try {
             if(serverSocket != null) serverSocket.close();
+            this.players.forEach((key, player) -> {
+                player.stop();
+            });
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(e.hashCode());

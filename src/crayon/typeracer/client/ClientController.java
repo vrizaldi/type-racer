@@ -1,6 +1,7 @@
 package crayon.typeracer.client;
 
 import crayon.typeracer.FXController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +39,7 @@ public class ClientController extends FXController {
     private TextField username;
 
     private boolean listening;
+    private Thread listenThread;
 
     public void connect() {
         // connect to specified ip and port
@@ -50,6 +53,10 @@ public class ClientController extends FXController {
             System.exit(e.hashCode());
         }
 
+        switchToEnterName();
+    }
+
+    private void switchToEnterName() {
         // clear screen
         clientScreen.getChildren().remove(clientConfig);
 
@@ -83,7 +90,8 @@ public class ClientController extends FXController {
 
         // start to listen to update
         listening = true;
-        new Thread(() -> listenToUpdate()).start();
+        listenThread = new Thread(() -> listenToUpdate());
+        listenThread.start();
     }
 
     private void listenToUpdate() {
@@ -105,5 +113,35 @@ public class ClientController extends FXController {
 
     private void parseData(String data) {
         System.out.println("Received: " + data);
+        String[] args = data.split(" ");
+        if(args[0].equals("count")) {
+            // show countdown
+            Platform.runLater(() -> {
+                clearScreen();
+                clientScreen.getChildren().add(new Text(args[1]));
+            });
+
+        } else if(args[0].equals("reset")) {
+            // clear screen
+            Platform.runLater(() -> {
+                switchToEnterName();
+            });
+        }
+    }
+
+    private void clearScreen() {
+        clientScreen.getChildren().removeAll(clientScreen.getChildren());
+    }
+
+    @Override
+    public void stop() {
+        this.listening = false;
+        if(client != null) {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
