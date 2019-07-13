@@ -127,6 +127,11 @@ public class PlayerListener implements Runnable {
         return client;
     }
 
+    public void reset() {
+        this.username = "";
+        this.progress = 0;
+    }
+
     public void stop() {
         this.connected = false;
         try {

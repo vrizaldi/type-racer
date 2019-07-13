@@ -184,6 +184,9 @@ public class ServerController extends FXController {
         isIngame = false;
         switchToWaitingRoom();
         broadcast("reset");
+        players.forEach((key, player) -> {
+            player.reset();
+        });
     }
 
     private void countDown(int from) {
