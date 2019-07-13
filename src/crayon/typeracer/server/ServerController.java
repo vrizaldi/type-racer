@@ -13,9 +13,9 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerController extends FXController {
 
@@ -23,6 +23,7 @@ public class ServerController extends FXController {
     private HashMap<Integer, PlayerListener> players = new HashMap<>();
     private int playerCount;
     private boolean waitForPlayer;
+    private boolean isIngame;
 
     @FXML
     StackPane serverScreen;
@@ -32,7 +33,8 @@ public class ServerController extends FXController {
     VBox serverConfig;
 
     VBox waitingScreen;
-    TextArea playerList;
+    TextArea dataView;
+    Button gameToggle;
 
     // SERVERCONFIG SCREEN
     public void openConnection(ActionEvent actionEvent) {
@@ -53,21 +55,23 @@ public class ServerController extends FXController {
         this.serverScreen.getChildren().add(this.waitingScreen);
 
         // create title
-        this.waitingScreen.getChildren().add(new Text("WAITINGROOM"));
+        this.waitingScreen.getChildren().add(new Text("SERVER"));
 
         // create playerList text area
-        this.playerList = new TextArea();
+        this.dataView = new TextArea();
         this.updatePlayerList();
-        this.playerList.setEditable(false);
-        this.playerList.setFocusTraversable(false);
-        this.waitingScreen.getChildren().add(playerList);
+        this.dataView.setEditable(false);
+        this.dataView.setFocusTraversable(false);
+        this.waitingScreen.getChildren().add(dataView);
 
         // create start game button
-        Button startGame = new Button("Start Game");
-        startGame.setOnAction((e) -> {
+        gameToggle = new Button("Start Game");
+        gameToggle.setOnAction((e) -> {
             startGame(e);
         });
-        this.waitingScreen.getChildren().add(startGame);
+        this.waitingScreen.getChildren().add(gameToggle);
+
+        isIngame = false;
 
         // wait for players to connect
         this.playerCount = 0;
@@ -104,6 +108,7 @@ public class ServerController extends FXController {
         new Thread(openCon).start();
     }
 
+
     // WAITINGROOM SCREEN
     public void startGame(ActionEvent actionEvent) {
         // stop waiting for player
@@ -113,14 +118,13 @@ public class ServerController extends FXController {
             e.printStackTrace();
         }
 
-        // switch to game
-        this.sceneController.switchTo("server");
-    }
+        // change start game to stop game on button
+        gameToggle.setText("Stop Game");
 
-    public void disconnect(int id) {
-        this.players.remove(id);
+        dataView.setText("Game started");
+        isIngame = true;
+        countDown(3);
 
-        updatePlayerList();
     }
 
     public void updatePlayerList() {
@@ -139,7 +143,7 @@ public class ServerController extends FXController {
                         playerListTxt += player.getUsername() + " (" + player.getClient().getRemoteSocketAddress()
                             + ")\n";
                 }
-                playerList.setText(playerListTxt);
+                dataView.setText(playerListTxt);
             }
         });
 
@@ -155,6 +159,47 @@ public class ServerController extends FXController {
     }
 
 
+    // IN GAME
+    private void countDown(int from) {
+        if(isIngame) {
+            if(from > 0) {
+                // still counting down
+                broadcast("count " + from);
+
+                Timer counter = new Timer();
+                counter.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        countDown(from - 1);
+                    }
+                }, 1000);
+
+            } else {
+                // start the game
+                broadcast("clearscreen");
+            }
+        }
+
+    }
+
+
+    // to communicate with client
+    private void broadcast(String data) {
+        // broadcast data to all players
+        System.out.println("Broadcasting: " + data);
+        players.forEach((key, player) -> {
+            player.sendData(data);
+        });
+    }
+
+    public void disconnect(int id) {
+        this.players.remove(id);
+
+        updatePlayerList();
+    }
+
+
+    // ON PROGRAM EXIT
     public void stop() {
         try {
             if(serverSocket != null) serverSocket.close();

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 
 public class ClientController extends FXController {
@@ -35,7 +36,9 @@ public class ClientController extends FXController {
     private VBox clientEnterName;
     private TextField username;
 
-    public void connect(ActionEvent actionEvent) {
+    private boolean listening;
+
+    public void connect() {
         // connect to specified ip and port
         System.out.println("Connecting to " + serverIp.getText() + ":" + serverPort.getText());
         try {
@@ -63,10 +66,10 @@ public class ClientController extends FXController {
 
         // add button for confirmation
         Button submitName = new Button("Submit");
-        submitName.setOnAction((e) -> {
-            startGame(e);
-        });
+        submitName.setOnAction(this::startGame);
         clientEnterName.getChildren().add(submitName);
+
+        this.listening = false;
     }
 
     private void startGame(ActionEvent e) {
@@ -77,9 +80,30 @@ public class ClientController extends FXController {
         out.println(data);
 
         clientScreen.getChildren().remove(clientEnterName);
+
+        // start to listen to update
+        listening = true;
+        new Thread(() -> listenToUpdate()).start();
     }
 
-    private void listenUpdate() {
-        System.out.println("Listening to update...");
+    private void listenToUpdate() {
+        while(this.listening) {
+            try {
+                parseData(in.readLine());
+
+            } catch (SocketException e) {
+                // disconnected
+                System.out.println("Disconnected");
+                this.listening = false;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void parseData(String data) {
+        System.out.println("Received: " + data);
     }
 }
