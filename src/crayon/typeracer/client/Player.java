@@ -16,7 +16,7 @@ public class Player {
         snail.setScaleY(0.5);
         snail.relocate(0, posY);
         this.pointer = pointer;
-        if(pointer != null) pointer.relocate(0, posY - 50);
+        if(pointer != null) pointer.relocate(60, posY);
         return snail;
     }
 
@@ -24,7 +24,7 @@ public class Player {
         this.progress = progress;
 
         snail.setX(posX);
-        if(pointer != null) pointer.setX(posX);
+        if(pointer != null) pointer.setX(posX + 60);
     }
 
     public int getProgress() {

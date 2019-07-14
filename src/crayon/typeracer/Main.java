@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
