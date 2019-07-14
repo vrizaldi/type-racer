@@ -8,7 +8,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,11 +49,12 @@ public class ClientController extends FXController {
 
     private Text typed;
     private Text untyped;
+    private Pane raceVisual;
 
     private boolean listening;
     private int id;
     private String challenge;
-    private HashMap<Integer, Integer> progresses;
+    private HashMap<Integer, Player> players;
 
     public void connect() {
         // connect to specified ip and port
@@ -173,13 +177,15 @@ public class ClientController extends FXController {
             initScoreboard(args);
             Platform.runLater(() -> {
                 updateChallenge();
-                updateScoreboard();
             });
 
         } else if(args[0].equals("update")) {
             // update scoreboard
             System.out.println("Updating player " + args[1] + " to progress " + args[2]);
-            this.progresses.put(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+            final double POSX = Screen.getPrimary().getBounds().getWidth() * Integer.parseInt(args[2])
+                    / this.challenge.length();
+            this.players.get(Integer.valueOf(args[1]))
+                    .update(Integer.valueOf(args[2]), POSX);
             this.updateChallenge();
 
         } else if(args[0].equals("finish")) {
@@ -200,21 +206,28 @@ public class ClientController extends FXController {
     }
 
     private void initScoreboard(String[] args) {
-        for(int i = 1; i < args.length; i++) {
-            System.out.println("parsing " + args[i]);
-            progresses.put(Integer.valueOf(args[i]), 0);
-        }
+        Platform.runLater(() -> {
+            final double DISTANCE = raceVisual.getPrefHeight() / (args.length - 1);
+            for(int i = 1; i < args.length; i++) {
+                System.out.println("parsing " + args[i]);
+                Player newPlayer = new Player();
+                players.put(Integer.valueOf(args[i]), newPlayer);
+                raceVisual.getChildren().add(newPlayer.initSnail(0.5 * DISTANCE + (i - 1) * DISTANCE));
 
-        System.out.println("Parsed scoreboard: ");
-        progresses.forEach((id, progress) -> {
-            System.out.println(id + " " + progress);
+            }
+
+            System.out.println("Parsed scoreboard: ");
+            players.forEach((id, players) -> {
+                System.out.println(id + " " + players.getProgress());
+            });
         });
+
     }
 
 
     // INGAME
     private void switchToGame() {
-        progresses = new HashMap<>();
+        players = new HashMap<>();
         Platform.runLater(() -> {
             clearScreen();
 
@@ -232,6 +245,14 @@ public class ClientController extends FXController {
             untyped.setFill(Color.BLACK);
             textFlow.getChildren().addAll(typed, untyped);
 
+            // add snail racing screen
+            raceVisual = new Pane();
+            final double RACE_VISUAL_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight() / 3;
+            raceVisual.setMinHeight(RACE_VISUAL_HEIGHT);
+            raceVisual.setMaxHeight(RACE_VISUAL_HEIGHT);
+            raceVisual.setPrefHeight(RACE_VISUAL_HEIGHT);
+            gamescreen.getChildren().add(raceVisual);
+
             this.sceneController.getScene().setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
@@ -239,7 +260,6 @@ public class ClientController extends FXController {
                 }
             });
 
-            updateScoreboard();
             updateChallenge();
         });
     }
@@ -254,30 +274,29 @@ public class ClientController extends FXController {
         clientScreen.getChildren().removeAll(clientScreen.getChildren());
     }
 
-    private void updateScoreboard() {
-    }
-
     private void updateChallenge() {
-        int progress = this.progresses.get(this.id);
-        final int MID = 15;
-        if(progress < MID) {
-            typed.setText(challenge.substring(0, progress));
-            int maxindex = MID * 2 > this.challenge.length() ? this.challenge.length() : MID * 2;
-            untyped.setText(challenge.substring(progress, maxindex));
+        Platform.runLater(() -> {
+            int progress = this.players.get(this.id).getProgress();
+            final int MID = 15;
+            if(progress < MID) {
+                typed.setText(challenge.substring(0, progress));
+                int maxindex = MID * 2 > this.challenge.length() ? this.challenge.length() : MID * 2;
+                untyped.setText(challenge.substring(progress, maxindex));
 
-        // progress >= MID
-        } else if(this.challenge.length() >= MID) {
-            // print the few middle character
-            typed.setText(challenge.substring(progress - MID, progress));
-            int maxindex = progress + MID > this.challenge.length() ? this.challenge.length() : progress + MID;
-            untyped.setText(challenge.substring(progress, maxindex));
+            // progress >= MID
+            } else if(this.challenge.length() >= MID) {
+                // print the few middle character
+                typed.setText(challenge.substring(progress - MID, progress));
+                int maxindex = progress + MID > this.challenge.length() ? this.challenge.length() : progress + MID;
+                untyped.setText(challenge.substring(progress, maxindex));
 
-        // challenge length < MID
-        } else {
-            // print to the end
-            typed.setText(challenge.substring(0, progress));
-            untyped.setText(challenge.substring(progress));
-        }
+            // challenge length < MID
+            } else {
+                // print to the end
+                typed.setText(challenge.substring(0, progress));
+                untyped.setText(challenge.substring(progress));
+            }
+        });
     }
 
 
