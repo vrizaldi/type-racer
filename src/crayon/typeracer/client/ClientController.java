@@ -3,12 +3,16 @@ package crayon.typeracer.client;
 import crayon.typeracer.FXController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -18,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.Key;
 import java.util.HashMap;
 
 
@@ -90,8 +95,7 @@ public class ClientController extends FXController {
         startGame = true;
 
         String data = "username " + username.getText();
-        System.out.println("Sending data: " + data);
-        out.println(data);
+        this.sendData(data);
 
         clientScreen.getChildren().remove(clientEnterName);
 
@@ -151,6 +155,20 @@ public class ClientController extends FXController {
                 updateScoreboard();
             });
 
+        } else if(args[0].equals("update")) {
+            // update scoreboard
+            System.out.println("Updating player " + args[1] + " to progress " + args[2]);
+            this.progresses.put(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+            this.updateChallenge();
+
+        } else if(args[0].equals("finish")) {
+            // player finished
+            System.out.println("Finished");
+            Platform.runLater(() -> {
+                clearScreen();
+                this.clientScreen.getChildren().add(new Text("Finished #" + args[1]));
+            });
+
 
         } else if(args[0].equals("reset")) {
             // clear screen
@@ -181,15 +199,45 @@ public class ClientController extends FXController {
 
             TextFlow textFlow = new TextFlow();
             typed = new Text();
+            typed.setFill(Color.RED);
             untyped = new Text();
+            untyped.setFill(Color.BLACK);
             textFlow.getChildren().addAll(typed, untyped);
             this.clientScreen.getChildren().add(textFlow);
+
+            this.sceneController.getScene().setOnKeyTyped(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    handleTyping(event);
+                }
+            });
 
             updateScoreboard();
             updateChallenge();
         });
     }
 
+    private void handleTyping(KeyEvent e) {
+        this.sendData("type " + e.getCharacter());
+    }
+
+
+    // UPDATE UI
+    private void clearScreen() {
+        clientScreen.getChildren().removeAll(clientScreen.getChildren());
+    }
+
+    private void updateScoreboard() {
+    }
+
+    private void updateChallenge() {
+        int progress = this.progresses.get(this.id);
+        typed.setText(challenge.substring(0, progress));
+        untyped.setText(challenge.substring(progress));
+    }
+
+
+    // COMMUNICATION WITH SERVER
     private void handleDisconnect() {
         // handle disconnect
         // go back to main menu
@@ -202,21 +250,13 @@ public class ClientController extends FXController {
         this.sceneController.switchTo("mainmenu");
     }
 
-    private void clearScreen() {
-        clientScreen.getChildren().removeAll(clientScreen.getChildren());
+    private void sendData(String data) {
+        System.out.println("Sending: " + data);
+        out.println(data);
     }
 
-    private void updateScoreboard() {
-    }
 
-    private void updateChallenge() {
-        int progress = this.progresses.get(this.id);
-        if(progress > 0) typed.setText(challenge.substring(0, progress));
-        else typed.setText("");
-
-        typed.setText(challenge.substring(progress));
-    }
-
+    // CALLED WHEN PROGRAM STOPPED
     @Override
     public void stop() {
         this.listening = false;

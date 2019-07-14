@@ -76,7 +76,7 @@ public class PlayerListener implements Runnable {
 
         System.out.println("Received: " + data);
         String[] args = data.split(" ");
-        if(args[0].equalsIgnoreCase("username")) {
+        if(args[0].equals("username")) {
             // identify as given username
             // all strings after "username" are taken as name
             this.username = "";
@@ -89,6 +89,23 @@ public class PlayerListener implements Runnable {
 
             // reply with its id
             sendData("id " + this.id);
+
+        } else if(args[0].equals("type")) {
+            // check if it's the right key
+            // if it is inc progress
+            // DONT FORGET to check space as well
+            if(this.progress < this.controller.getChallenge().length()
+                    && data.charAt(5) == this.controller.getChallenge().charAt(this.progress)) {
+                this.incProgress();
+                this.controller.callUpdate(this.id);
+
+                if(this.progress == this.controller.getChallenge().length()) {
+                    // this player finished
+                    System.out.println("Player " + id + " finished");
+                    int place = this.controller.callFinish();
+                    this.sendData("finish " + place);
+                }
+            }
         }
     }
 

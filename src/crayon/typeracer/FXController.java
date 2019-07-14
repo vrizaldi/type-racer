@@ -1,6 +1,7 @@
 package crayon.typeracer;
 
 import crayon.typeracer.SceneController;
+import javafx.scene.Scene;
 
 public class FXController {
     protected SceneController sceneController;

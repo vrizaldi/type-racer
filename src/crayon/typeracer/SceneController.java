@@ -50,6 +50,10 @@ public class SceneController {
         return this.currentRoot;
     }
 
+    public Scene getScene() {
+        return this.main;
+    }
+
     public void stop() {
         this.controllers.forEach((controller) -> {
             controller.stop();

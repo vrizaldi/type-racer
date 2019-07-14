@@ -20,11 +20,12 @@ import java.util.TimerTask;
 public class ServerController extends FXController {
 
     private ServerSocket serverSocket;
-    private HashMap<Integer, PlayerListener> players = new HashMap<>();
+    private HashMap<Integer, PlayerListener> players;
     private int playerCount = 0;
     private boolean waitForPlayer;
     private boolean isIngame;
     private String challenge;       // the string to be typed
+    private int finishCount;
 
     @FXML
     StackPane serverScreen;
@@ -51,6 +52,8 @@ public class ServerController extends FXController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        players = new HashMap<>();
 
         // clear screen
         clearscreen();
@@ -134,6 +137,8 @@ public class ServerController extends FXController {
 
 
     public void updatePlayerList() {
+        if(!waitForPlayer) return;
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -167,6 +172,8 @@ public class ServerController extends FXController {
 
     // ENTER CHALLENGE SCREEN
     public void startGame(ActionEvent actionEvent) {
+        finishCount = 0;
+
         // change start game to stop game on button
         gameToggle.setText("Stop Game");
         gameToggle.setOnAction(this::stopGame);
@@ -217,7 +224,7 @@ public class ServerController extends FXController {
     }
 
     private void updateScoreboard() {
-
+        if(!isIngame) return;
         String scoreboardServer = "Current Scoreboard:\n";
         for(Integer key : players.keySet()) {
             PlayerListener player = players.get(key);
@@ -235,6 +242,9 @@ public class ServerController extends FXController {
         broadcast(scoreboardClient);
     }
 
+    public String getChallenge() {
+        return challenge;
+    }
 
     // UTIL
     private void clearscreen() {
@@ -257,15 +267,25 @@ public class ServerController extends FXController {
         updatePlayerList();
     }
 
+    public void callUpdate(int id) {
+        broadcast("update " + id + " " + players.get(id).getProgress());
+        this.updateScoreboard();
+    }
+
+    public int callFinish() {
+        return ++this.finishCount;
+    }
+
 
     // ON PROGRAM EXIT
     public void stop() {
         System.out.println("Exiting program...");
         try {
             if(serverSocket != null) serverSocket.close();
-            this.players.forEach((key, player) -> {
-                player.stop();
-            });
+            if(players != null)
+                this.players.forEach((key, player) -> {
+                    player.stop();
+                });
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(e.hashCode());
