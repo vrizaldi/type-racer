@@ -3,7 +3,6 @@ package crayon.typeracer.client;
 import crayon.typeracer.FXController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Screen;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,7 +42,6 @@ public class ClientController extends FXController {
     @FXML
     private TextField serverPort;
 
-    private VBox clientEnterName;
     private TextField username;
 
     private Text typed;
@@ -73,8 +72,9 @@ public class ClientController extends FXController {
         clearScreen();
 
         /// create VBox to contain all
-        clientEnterName = new VBox();
+        VBox clientEnterName = new VBox();
         clientScreen.getChildren().add(clientEnterName);
+        clientEnterName.setId("enter-name-screen");
 
         // add label for name
         clientEnterName.getChildren().add(new Label("Name"));
@@ -82,6 +82,10 @@ public class ClientController extends FXController {
         // add text field for username
         username = new TextField();
         clientEnterName.getChildren().add(username);
+        double prefWidth = Screen.getPrimary().getVisualBounds().getWidth() / 3;
+        username.setMaxWidth(prefWidth);
+        username.setMinWidth(prefWidth);
+        username.setPrefWidth(prefWidth);
 
         // add button for confirmation
         Button submitName = new Button("Submit");
@@ -97,7 +101,22 @@ public class ClientController extends FXController {
         String data = "username " + username.getText();
         this.sendData(data);
 
-        clientScreen.getChildren().remove(clientEnterName);
+        // move on to wait for instruction from server
+        clearScreen();
+
+        // create VBox to contain all
+        VBox waitScreen = new VBox();
+        waitScreen.setId("wait-screen-client");
+        clientScreen.getChildren().add(waitScreen);
+
+        waitScreen.getChildren().add(new Text("Please wait, " + username.getText()));
+
+        Button backToEnterName = new Button("Change name");
+        backToEnterName.setOnAction((actionEvent) -> {
+            this.sendData("unidentify");
+            this.switchToEnterName();
+        });
+        waitScreen.getChildren().add(backToEnterName);
 
         // start to listen to update
         listening = true;
@@ -139,6 +158,8 @@ public class ClientController extends FXController {
             // show countdown
             Platform.runLater(() -> {
                 clearScreen();
+                Text count = new Text(args[1]);
+                count.getStyleClass().add("counter");
                 clientScreen.getChildren().add(new Text(args[1]));
             });
 
@@ -198,12 +219,14 @@ public class ClientController extends FXController {
             clearScreen();
 
             TextFlow textFlow = new TextFlow();
+            textFlow.setId("to-type");
+            this.clientScreen.getChildren().add(textFlow);
+
             typed = new Text();
             typed.setFill(Color.RED);
             untyped = new Text();
             untyped.setFill(Color.BLACK);
             textFlow.getChildren().addAll(typed, untyped);
-            this.clientScreen.getChildren().add(textFlow);
 
             this.sceneController.getScene().setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
@@ -232,8 +255,25 @@ public class ClientController extends FXController {
 
     private void updateChallenge() {
         int progress = this.progresses.get(this.id);
-        typed.setText(challenge.substring(0, progress));
-        untyped.setText(challenge.substring(progress));
+        final int MID = 15;
+        if(progress < MID) {
+            typed.setText(challenge.substring(0, progress));
+            int maxindex = MID * 2 > this.challenge.length() ? this.challenge.length() : MID * 2;
+            untyped.setText(challenge.substring(progress, maxindex));
+
+        // progress >= MID
+        } else if(this.challenge.length() >= MID) {
+            // print the few middle character
+            typed.setText(challenge.substring(progress - MID, progress));
+            int maxindex = progress + MID > this.challenge.length() ? this.challenge.length() : progress + MID;
+            untyped.setText(challenge.substring(progress, maxindex));
+
+        // challenge length < MID
+        } else {
+            // print to the end
+            typed.setText(challenge.substring(0, progress));
+            untyped.setText(challenge.substring(progress));
+        }
     }
 
 
@@ -267,5 +307,9 @@ public class ClientController extends FXController {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void backToMainMenu(ActionEvent actionEvent) {
+        this.sceneController.switchTo("mainmenu");
     }
 }

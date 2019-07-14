@@ -80,7 +80,7 @@ public class PlayerListener implements Runnable {
             // identify as given username
             // all strings after "username" are taken as name
             this.username = "";
-            for(int i = 1; i < args.length; i++) {
+            for (int i = 1; i < args.length; i++) {
                 username += args[i] + " ";
             }
             this.username = this.username.trim();
@@ -89,6 +89,10 @@ public class PlayerListener implements Runnable {
 
             // reply with its id
             sendData("id " + this.id);
+
+        } else if(args[0].equals("unidentify")) {
+            this.username = "";
+            this.controller.updatePlayerList();
 
         } else if(args[0].equals("type")) {
             // check if it's the right key

@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Button?>
 <StackPane fx:id="clientScreen" fx:controller="crayon.typeracer.client.ClientController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <VBox fx:id="clientConfig">
+    <VBox id="client-config" fx:id="clientConfig">
         <Text text="CLIENT CONFIG"/>
         <HBox>
             <Label text="IP Address"/>
@@ -18,6 +18,7 @@
             <Label text="Port"/>
             <TextField fx:id="serverPort" />
         </HBox>
-        <Button onAction="#connect"/>
+        <Button text="Connect" onAction="#connect"/>
+        <Button text="Cancel" onAction="#backToMainMenu"/>
     </VBox>
 </StackPane>

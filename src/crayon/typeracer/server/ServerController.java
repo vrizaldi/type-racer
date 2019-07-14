@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -34,13 +35,15 @@ public class ServerController extends FXController {
     @FXML
     VBox serverConfig;
 
-    VBox waitingScreen;
     TextArea dataView;
     Button gameToggle;
+    Button backButton;
+
 
     // SERVERCONFIG SCREEN
     public void openConnection(ActionEvent e) {
         this.playerCount = 0;
+        players = new HashMap<>();
         this.switchToWaitingRoom();
     }
 
@@ -53,30 +56,28 @@ public class ServerController extends FXController {
             e.printStackTrace();
         }
 
-        players = new HashMap<>();
-
         // clear screen
         clearscreen();
 
         // create the waiting room screen
         // create VBox to hold all
-        this.waitingScreen = new VBox();
-        this.serverScreen.getChildren().add(this.waitingScreen);
+        VBox serverComps = new VBox();
+        this.serverScreen.getChildren().add(serverComps);
 
         // create title
-        this.waitingScreen.getChildren().add(new Text("SERVER"));
+        serverComps.getChildren().add(new Text("SERVER"));
 
         // create playerList text area
         this.dataView = new TextArea();
         this.updatePlayerList();
         this.dataView.setEditable(false);
         this.dataView.setFocusTraversable(false);
-        this.waitingScreen.getChildren().add(dataView);
+        serverComps.getChildren().add(dataView);
 
         // create start game button
         gameToggle = new Button("Enter Challenge");
         gameToggle.setOnAction(this::enterChallenge);
-        this.waitingScreen.getChildren().add(gameToggle);
+        serverComps.getChildren().add(gameToggle);
 
         isIngame = false;
 
@@ -128,14 +129,37 @@ public class ServerController extends FXController {
             e.printStackTrace();
         }
 
-        // allow textarea to be edited
-        dataView.setEditable(true);
-        dataView.setFocusTraversable(true);
-        dataView.setText("THIS WILL BE THE TEXT TO BE TYPED");
+        Platform.runLater(() -> {
+            // clear screen
+            clearscreen();
+            // create the enter challenge screen
+            // create VBox to hold all
+            VBox serverComps = new VBox();
+            this.serverScreen.getChildren().add(serverComps);
 
-        // edit the button
-        gameToggle.setText("Start Game");
-        gameToggle.setOnAction(this::startGame);
+            // create title
+            serverComps.getChildren().add(new Text("ENTER CHALLENGE"));
+
+            // create playerList text area
+            this.dataView = new TextArea("THIS WILL BE THE TEXT TO BE TYPED");
+            this.updatePlayerList();
+            this.dataView.setEditable(true);
+            this.dataView.setFocusTraversable(true);
+            serverComps.getChildren().add(dataView);
+
+            // create start game button
+            gameToggle = new Button("Start game");
+            gameToggle.setOnAction(this::startGame);
+            serverComps.getChildren().add(gameToggle);
+
+            // create a back button
+            Button back = new Button("Back");
+            back.setOnAction((e) -> {
+                this.switchToWaitingRoom();
+            });
+            serverComps.getChildren().add(back);
+        });
+
     }
 
 
@@ -148,7 +172,8 @@ public class ServerController extends FXController {
                 String playerListTxt =
                     "Opened a connection on " + serverSocket.getLocalSocketAddress() + "\n";
                 Object[] playerArr = players.values().toArray();
-                playerListTxt += countIdentified(playerArr) + "/" + playerArr.length + " players identified:\n";
+                int identifiedPlayer = countIdentified(playerArr);
+                playerListTxt += identifiedPlayer + "/" + playerArr.length + " players identified:\n";
                 for(int i = 0; i < playerArr.length; i++) {
                     PlayerListener player = (PlayerListener)playerArr[i];
                     if(player.getUsername().isEmpty())
@@ -158,6 +183,9 @@ public class ServerController extends FXController {
                             + ")\n";
                 }
                 dataView.setText(playerListTxt);
+
+                if(playerArr.length > 0  && identifiedPlayer == playerArr.length) gameToggle.setDisable(false);
+                else gameToggle.setDisable(true);
             }
         });
 
@@ -176,6 +204,9 @@ public class ServerController extends FXController {
     // ENTER CHALLENGE SCREEN
     public void startGame(ActionEvent actionEvent) {
         finishCount = 0;
+
+        dataView.setEditable(false);
+        dataView.setFocusTraversable(false);
 
         // change start game to stop game on button
         gameToggle.setText("Stop Game");
@@ -253,7 +284,8 @@ public class ServerController extends FXController {
 
     // UTIL
     private void clearscreen() {
-        serverScreen.getChildren().remove(serverScreen.getChildren());
+        System.out.println("clearing screen");
+        serverScreen.getChildren().removeAll(serverScreen.getChildren());
     }
 
 
@@ -298,4 +330,9 @@ public class ServerController extends FXController {
             System.exit(e.hashCode());
         }
     }
+
+    public void switchToMainMenu(ActionEvent actionEvent) {
+        this.sceneController.switchTo("mainmenu");
+    }
+
 }

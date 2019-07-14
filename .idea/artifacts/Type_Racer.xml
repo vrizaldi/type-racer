@@ -1,9 +1,14 @@
 <component name="ArtifactManager">
-  <artifact type="javafx" name="JavaFXApp">
-    <output-path>$PROJECT_DIR$/out/artifacts/JavaFXApp</output-path>
+  <artifact type="javafx" name="Type Racer">
+    <output-path>$PROJECT_DIR$/out/artifacts/Type_Racer</output-path>
     <properties id="javafx-properties">
       <options>
         <option name="appClass" value="sample.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="Type Racer" />
+        <option name="vendor" value="vriazldi" />
+        <option name="version" value="" />
       </options>
     </properties>
     <root id="root">

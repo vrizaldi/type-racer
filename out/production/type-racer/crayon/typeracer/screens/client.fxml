@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.HBox?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <StackPane fx:controller="crayon.typeracer.client.ClientController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
     <VBox>

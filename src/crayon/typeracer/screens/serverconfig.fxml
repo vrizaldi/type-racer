@@ -8,12 +8,13 @@
 
 <StackPane fx:id="serverScreen" fx:controller="crayon.typeracer.server.ServerController"
            xmlns:fx="http://javafx.com/fxml" alignment="center">
-    <VBox fx:id="serverConfig">
+    <VBox id="server-config" fx:id="serverConfig">
         <Text text="SERVER CONFIG" />
         <HBox id="server-port-input">
             <Label text="Port" />
-            <TextField fx:id="port" />
+            <TextField fx:id="port"/>
         </HBox>
         <Button text="Open Connection" onAction="#openConnection"/>
+        <Button text="Cancel" onAction="#switchToMainMenu"/>
     </VBox>
 </StackPane>

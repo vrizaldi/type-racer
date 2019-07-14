@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'dpcomic';
+    src: url('file:res/dpcomic.ttf');
+}
+
+.root {
+    -fx-font-family: 'dpcomic';
+    -fx-font-size: 20pt;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+
+Button {
+    -fx-background-color: #00000000;
+}
+
+Button:hover {
+    -fx-text-fill: #e04c3f;
+}
+
+TextArea {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-padding: 1em;
+    -fx-border: none;
+    -fx-focus-color: -fx-control-inner-background ;
+    -fx-faint-focus-color: -fx-control-inner-background ;
+}
+
+#mainmenu-screen {
+    -fx-background-color: #ffffff;
+}
+
+#menu {
+    -fx-alignment: top-right;
+}
+
+#server-config {
+    -fx-alignment: center;
+}
+
+#server-port-input {
+    -fx-alignment: center;
+}
+
+.menu-btn {
+}
+
+.menu-btn:hover {
+}
+
+#client-config {
+    -fx-alignment: center;
+}
+
+#client-config HBox {
+    -fx-alignment: center;
+}
+
+#enter-name-screen {
+    -fx-alignment: center;
+}
+
+#wait-screen-client {
+    -fx-alignment: center;
+}
+
+#to-type {
+    -fx-alignment: center;
+}
