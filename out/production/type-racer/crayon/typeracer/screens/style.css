@@ -66,6 +66,7 @@ TextArea {
     -fx-alignment: center;
 }
 
-#to-type {
-    -fx-alignment: center;
+#totype {
+    -fx-padding: 3em;
+    -fx-text-alignment: center;
 }

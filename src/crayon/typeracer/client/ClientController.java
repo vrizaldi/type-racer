@@ -218,9 +218,13 @@ public class ClientController extends FXController {
         Platform.runLater(() -> {
             clearScreen();
 
+            VBox gamescreen = new VBox();
+            gamescreen.setId("game");
+            this.clientScreen.getChildren().add(gamescreen);
+
             TextFlow textFlow = new TextFlow();
-            textFlow.setId("to-type");
-            this.clientScreen.getChildren().add(textFlow);
+            textFlow.setId("totype");
+            gamescreen.getChildren().add(textFlow);
 
             typed = new Text();
             typed.setFill(Color.RED);

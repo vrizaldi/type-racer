@@ -5,34 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Type_Racer.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/JavaFXApp.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/MainMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/MainMenuController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/client/ClientController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/client/ClientController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/client/ClientController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/client/ClientController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/clientconfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/clientconfig.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/mainmenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/mainmenu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/serverconfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/serverconfig.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/waitingroom.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/screens/waitingroom.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/PlayerListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/PlayerListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/type-racer/crayon/typeracer/server/ServerController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/client/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/client/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/clientconfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/clientconfig.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/mainmenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/mainmenu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/serverconfig.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/serverconfig.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/waitingroom.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/waitingroom.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/server/PlayerListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/server/PlayerListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/server/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/server/ServerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/crayon/typeracer/screens/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/crayon/typeracer/screens/style.css" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -102,12 +76,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/client/ClientController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="268" column="65" selection-start-line="268" selection-start-column="65" selection-end-line="268" selection-end-column="65" />
+            <state relative-caret-position="3458">
+              <caret line="225" column="33" selection-start-line="225" selection-start-column="33" selection-end-line="225" selection-end-column="33" />
               <folding>
                 <element signature="e#7130#7131#0" expanded="true" />
                 <element signature="e#7210#7211#0" expanded="true" />
-                <element signature="e#9562#9563#0" expanded="true" />
+                <element signature="e#9693#9694#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -116,8 +90,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/SceneController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="380">
+              <caret line="20" column="2" lean-forward="true" selection-start-line="20" selection-start-column="2" selection-end-line="20" selection-end-column="2" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1377#1378#0" expanded="true" />
@@ -170,8 +144,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="69" column="26" selection-start-line="69" selection-start-column="26" selection-end-line="69" selection-end-column="26" />
+            <state relative-caret-position="267">
+              <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -242,8 +216,8 @@
         <option value="$PROJECT_DIR$/src/crayon/typeracer/Main.java" />
         <option value="$PROJECT_DIR$/src/crayon/typeracer/screens/serverconfig.fxml" />
         <option value="$PROJECT_DIR$/src/crayon/typeracer/screens/clientconfig.fxml" />
-        <option value="$PROJECT_DIR$/src/crayon/typeracer/screens/style.css" />
         <option value="$PROJECT_DIR$/src/crayon/typeracer/client/ClientController.java" />
+        <option value="$PROJECT_DIR$/src/crayon/typeracer/screens/style.css" />
       </list>
     </option>
   </component>
@@ -328,7 +302,7 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1563111209871" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1563112093288" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="project.structure.last.edited" value="Artifacts" />
@@ -722,20 +696,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="69" column="26" selection-start-line="69" selection-start-column="26" selection-end-line="69" selection-end-column="26" />
+        <state relative-caret-position="267">
+          <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/mainmenu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="39" selection-start-column="39" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/client.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -751,6 +717,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/client.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="39" selection-start-column="39" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/screens/server.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
@@ -761,8 +735,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/SceneController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="380">
+          <caret line="20" column="2" lean-forward="true" selection-start-line="20" selection-start-column="2" selection-end-line="20" selection-end-column="2" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1377#1378#0" expanded="true" />
@@ -773,12 +747,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crayon/typeracer/client/ClientController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="268" column="65" selection-start-line="268" selection-start-column="65" selection-end-line="268" selection-end-column="65" />
+        <state relative-caret-position="3458">
+          <caret line="225" column="33" selection-start-line="225" selection-start-column="33" selection-end-line="225" selection-end-column="33" />
           <folding>
             <element signature="e#7130#7131#0" expanded="true" />
             <element signature="e#7210#7211#0" expanded="true" />
-            <element signature="e#9562#9563#0" expanded="true" />
+            <element signature="e#9693#9694#0" expanded="true" />
           </folding>
         </state>
       </provider>
