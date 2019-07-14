@@ -83,6 +83,9 @@ public class ServerController extends FXController {
         // wait for players to connect
         ServerController controller = this;     // to be used inside anon class
         this.waitForPlayer = true;
+        Platform.runLater(() -> {
+            this.updatePlayerList();
+        });
         Runnable openCon = new Runnable() {
             @Override
             public void run() {
@@ -225,7 +228,9 @@ public class ServerController extends FXController {
 
     private void updateScoreboard() {
         if(!isIngame) return;
-        String scoreboardServer = "Current Scoreboard:\n";
+        String scoreboardServer =
+                finishCount + "/" + players.size() + " players finished\n" +
+                "Current Scoreboard:\n";
         for(Integer key : players.keySet()) {
             PlayerListener player = players.get(key);
             scoreboardServer += player.getUsername() + "\t\t" + player.getProgress() + "/" + challenge.length() + "\n";
@@ -273,7 +278,9 @@ public class ServerController extends FXController {
     }
 
     public int callFinish() {
-        return ++this.finishCount;
+        this.finishCount++;
+        this.updateScoreboard();
+        return this.finishCount;
     }
 
 
