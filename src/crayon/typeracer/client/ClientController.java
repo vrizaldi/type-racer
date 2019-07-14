@@ -11,7 +11,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import org.fxmisc.richtext.InlineCssTextArea;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,7 +46,7 @@ public class ClientController extends FXController {
     private boolean listening;
     private int id;
     private String challenge;
-    private HashMap<Integer, Player> players;
+    private HashMap<Integer, Integer> progresses;
 
     public void connect() {
         // connect to specified ip and port
@@ -145,8 +144,13 @@ public class ClientController extends FXController {
             System.out.println("Challenge: " + challenge);
             switchToGame();
 
-        } else if(args[0].equals("scoreboard")) {
-            parseScoreboard(args);
+        } else if(args[0].equals("init")) {
+            initScoreboard(args);
+            Platform.runLater(() -> {
+                updateChallenge();
+                updateScoreboard();
+            });
+
 
         } else if(args[0].equals("reset")) {
             // clear screen
@@ -156,27 +160,22 @@ public class ClientController extends FXController {
         }
     }
 
-    private void parseScoreboard(String[] args) {
-        for(int i = 1; i < args.length; i = i + 2) {
-            System.out.println("parsing " + args[i] + " " + args[i + 1]);
-            if(players.containsKey(Integer.valueOf(args[i]))) {
-                // players already exist in scoreboard
-                players.get(Integer.valueOf(args[i])).updateProgress(args[i + 1]);
-            } else {
-                players.put(Integer.valueOf(args[i]), new Player(Integer.parseInt(args[i + 1])));
-            }
+    private void initScoreboard(String[] args) {
+        for(int i = 1; i < args.length; i++) {
+            System.out.println("parsing " + args[i]);
+            progresses.put(Integer.valueOf(args[i]), 0);
         }
 
         System.out.println("Parsed scoreboard: ");
-        players.forEach((key, player) -> {
-            System.out.println(player.getId() + " " + player.getProgress());
+        progresses.forEach((id, progress) -> {
+            System.out.println(id + " " + progress);
         });
     }
 
 
     // INGAME
     private void switchToGame() {
-        players = new HashMap<>();
+        progresses = new HashMap<>();
         Platform.runLater(() -> {
             clearScreen();
 
@@ -211,7 +210,7 @@ public class ClientController extends FXController {
     }
 
     private void updateChallenge() {
-        int progress = this.players.get(this.id).getProgress();
+        int progress = this.progresses.get(this.id);
         if(progress > 0) typed.setText(challenge.substring(0, progress));
         else typed.setText("");
 

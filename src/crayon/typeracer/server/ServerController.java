@@ -209,22 +209,29 @@ public class ServerController extends FXController {
                 broadcast("start " + challenge);
 
                 // show score on dataView
-                updateScore();
+                updateScoreboard();
+                initClientScoreboard();
             }
         }
 
     }
 
-    private void updateScore() {
+    private void updateScoreboard() {
 
         String scoreboardServer = "Current Scoreboard:\n";
-        String scoreboardClient = "scoreboard ";
         for(Integer key : players.keySet()) {
             PlayerListener player = players.get(key);
             scoreboardServer += player.getUsername() + "\t\t" + player.getProgress() + "/" + challenge.length() + "\n";
-            scoreboardClient += player.getId() + " " + player.getProgress() + " ";  // player's id progress separated by space
         }
         dataView.setText(scoreboardServer);
+    }
+
+    private void initClientScoreboard() {
+        String scoreboardClient = "init ";
+        for(Integer key : players.keySet()) {
+            PlayerListener player = players.get(key);
+            scoreboardClient += player.getId() + " ";  // player's id progress separated by space
+        }
         broadcast(scoreboardClient);
     }
 
