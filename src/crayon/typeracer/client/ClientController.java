@@ -249,7 +249,7 @@ public class ClientController extends FXController {
 
             // add snail racing screen
             raceVisual = new Pane();
-            final double RACE_VISUAL_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight() / 3;
+            final double RACE_VISUAL_HEIGHT = Screen.getPrimary().getVisualBounds().getHeight() * 2 / 3;
             raceVisual.setMinHeight(RACE_VISUAL_HEIGHT);
             raceVisual.setMaxHeight(RACE_VISUAL_HEIGHT);
             raceVisual.setPrefHeight(RACE_VISUAL_HEIGHT);

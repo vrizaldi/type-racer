@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +23,7 @@ public class ServerController extends FXController {
 
     private ServerSocket serverSocket;
     private HashMap<Integer, PlayerListener> players;
+    private ArrayList<String> winners;
     private int playerCount = 0;
     private boolean waitForPlayer;
     private boolean isIngame;
@@ -38,6 +40,10 @@ public class ServerController extends FXController {
     TextArea dataView;
     Button gameToggle;
     Button backButton;
+
+    public ServerController() {
+        this.winners = new ArrayList<>();
+    }
 
 
     // SERVERCONFIG SCREEN
@@ -66,6 +72,9 @@ public class ServerController extends FXController {
 
         // create title
         serverComps.getChildren().add(new Text("SERVER"));
+
+        // clear winners
+        this.winners.clear();
 
         // create playerList text area
         this.dataView = new TextArea();
@@ -213,7 +222,12 @@ public class ServerController extends FXController {
         gameToggle.setOnAction(this::stopGame);
 
         // save challenge
-        this.challenge = dataView.getText();
+        // remove endlines
+
+        this.challenge = dataView.getText()
+                .replace('\n', ' ')
+                .replace('“', '"')
+                .replace('”', '"');
 
         dataView.setText("Game started");
         isIngame = true;
@@ -260,8 +274,12 @@ public class ServerController extends FXController {
     private void updateScoreboard() {
         if(!isIngame) return;
         String scoreboardServer =
-                finishCount + "/" + players.size() + " players finished\n" +
-                "Current Scoreboard:\n";
+                finishCount + "/" + players.size() + " players finished:\n";
+        for(int i = 0; i < winners.size(); i++) {
+            String winner = winners.get(i);
+            scoreboardServer += (i + 1) + ": " + winner + "\n";
+        }
+        scoreboardServer += "\nCurrent Scoreboard:\n";
         for(Integer key : players.keySet()) {
             PlayerListener player = players.get(key);
             scoreboardServer += player.getUsername() + "\t\t" + player.getProgress() + "/" + challenge.length() + "\n";
@@ -305,7 +323,12 @@ public class ServerController extends FXController {
     }
 
     public void callUpdate(int id) {
-        broadcast("update " + id + " " + players.get(id).getProgress());
+        PlayerListener player = players.get(id);
+        if(player.getProgress() == challenge.length()) {
+            // win
+            winners.add(player.getUsername());
+        }
+        broadcast("update " + id + " " + player.getProgress());
         this.updateScoreboard();
     }
 

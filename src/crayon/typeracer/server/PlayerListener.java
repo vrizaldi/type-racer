@@ -99,6 +99,7 @@ public class PlayerListener implements Runnable {
             // if it is inc progress
             // DONT FORGET to check space as well
             if(this.progress < this.controller.getChallenge().length()
+                    && data.length() >= 6
                     && data.charAt(5) == this.controller.getChallenge().charAt(this.progress)) {
                 this.incProgress();
                 this.controller.callUpdate(this.id);
