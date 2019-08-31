@@ -213,8 +213,9 @@ public class ClientController extends FXController {
                 System.out.println("parsing " + args[i]);
                 Player newPlayer = new Player();
                 players.put(Integer.valueOf(args[i]), newPlayer);
-                ImageView p = Integer.parseInt(args[i]) == this.id ? pointer : null;
-                raceVisual.getChildren().add(newPlayer.initSnail(0.5 * DISTANCE + (i - 1) * DISTANCE, p));
+//                ImageView p = Integer.parseInt(args[i]) == this.id ? pointer : null;
+                raceVisual.getChildren().add(newPlayer.initSnail(0.5 * DISTANCE + (i - 1) * DISTANCE,
+                        Integer.parseInt(args[i]) == this.id));
 
             }
 
@@ -255,9 +256,9 @@ public class ClientController extends FXController {
             raceVisual.setPrefHeight(RACE_VISUAL_HEIGHT);
             gamescreen.getChildren().add(raceVisual);
 
-            pointer = new ImageView(new Image("file:res/pointer.gif"));
-            pointer.setScaleX(0.2); pointer.setScaleY(0.2);
-            raceVisual.getChildren().add(pointer);
+  //          pointer = new ImageView(new Image("file:res/pointer.gif"));
+  //          pointer.setScaleX(0.2); pointer.setScaleY(0.2);
+  //          raceVisual.getChildren().add(pointer);
 
             this.sceneController.getScene().setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override

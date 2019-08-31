@@ -24,11 +24,13 @@ public class ServerController extends FXController {
     private ServerSocket serverSocket;
     private HashMap<Integer, PlayerListener> players;
     private ArrayList<String> winners;
+    private ArrayList<Long> winnerTimes;
     private int playerCount = 0;
     private boolean waitForPlayer;
     private boolean isIngame;
     private String challenge;       // the string to be typed
     private int finishCount;
+    private long startTime;
 
     @FXML
     StackPane serverScreen;
@@ -43,6 +45,7 @@ public class ServerController extends FXController {
 
     public ServerController() {
         this.winners = new ArrayList<>();
+        this.winnerTimes = new ArrayList<>();
     }
 
 
@@ -75,6 +78,7 @@ public class ServerController extends FXController {
 
         // clear winners
         this.winners.clear();
+        this.winnerTimes.clear();
 
         // create playerList text area
         this.dataView = new TextArea();
@@ -213,6 +217,8 @@ public class ServerController extends FXController {
     // ENTER CHALLENGE SCREEN
     public void startGame(ActionEvent actionEvent) {
         finishCount = 0;
+        startTime = System.currentTimeMillis();
+        System.out.println("start time: " + startTime);
 
         dataView.setEditable(false);
         dataView.setFocusTraversable(false);
@@ -277,7 +283,11 @@ public class ServerController extends FXController {
                 finishCount + "/" + players.size() + " players finished:\n";
         for(int i = 0; i < winners.size(); i++) {
             String winner = winners.get(i);
-            scoreboardServer += (i + 1) + ": " + winner + "\n";
+            long winTime = winnerTimes.get(i);
+            int minute = (int)(winTime / 60000);
+            int second = (int)(winTime % 60000 / 1000);
+            int mili = (int)(winTime % 60000 % 1000);
+            scoreboardServer += (i + 1) + ": " + winner + " (" + minute + ":" + second + "." + mili + ")\n";
         }
         scoreboardServer += "\nCurrent Scoreboard:\n";
         for(Integer key : players.keySet()) {
@@ -327,6 +337,7 @@ public class ServerController extends FXController {
         if(player.getProgress() == challenge.length()) {
             // win
             winners.add(player.getUsername());
+            winnerTimes.add(System.currentTimeMillis() - startTime);
         }
         broadcast("update " + id + " " + player.getProgress());
         this.updateScoreboard();

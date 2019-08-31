@@ -6,25 +6,30 @@ import javafx.scene.image.ImageView;
 
 public class Player {
     private int progress;
+    private int offset;
     private ImageView snail;
-    private ImageView pointer;
+//    private ImageView pointer;
 
-    public ImageView initSnail(double posY, ImageView pointer) {
+    public ImageView initSnail(double posY, boolean main) {
         System.out.println("initialising snail at " + posY);
-        snail = new ImageView(new Image("file:res/snail.gif"));
-        snail.setScaleX(-0.5);
-        snail.setScaleY(0.5);
-        snail.relocate(0, posY);
-        this.pointer = pointer;
-        if(pointer != null) pointer.relocate(60, posY);
+        String url = "file:res/snail.gif";
+        if(main) url = "file:res/snail main.gif";
+        snail = new ImageView(new Image(url));
+        float scale = 0.5f;
+        offset = 0;
+        snail.setScaleX(-scale);
+        snail.setScaleY(scale);
+        snail.relocate(0 + offset, posY + offset);
+//        this.pointer = pointer;
+//        if(pointer != null) pointer.relocate(60, posY);
         return snail;
     }
 
     public void update(int progress, double posX) {
         this.progress = progress;
 
-        snail.setX(posX);
-        if(pointer != null) pointer.setX(posX + 60);
+        snail.setX(posX + offset);
+ //       if(pointer != null) pointer.setX(posX + 60);
     }
 
     public int getProgress() {
