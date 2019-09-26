@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -51,6 +50,8 @@ public class ClientController extends FXController {
     private Text untyped;
     private Pane raceVisual;
     private ImageView pointer;
+
+    private Button backToEnterName;
 
     private boolean listening;
     private int id;
@@ -116,7 +117,7 @@ public class ClientController extends FXController {
 
         waitScreen.getChildren().add(new Text("Please wait, " + username.getText()));
 
-        Button backToEnterName = new Button("Change name");
+        backToEnterName = new Button("Change name");
         backToEnterName.setOnAction((actionEvent) -> {
             this.sendData("unidentify");
             this.switchToEnterName();
@@ -202,6 +203,24 @@ public class ClientController extends FXController {
             // clear screen
             Platform.runLater(() -> {
                 switchToEnterName();
+            });
+
+        } else if(args[0].equals("nochange")) {
+            // can't change name
+            Platform.runLater(() -> {
+                VBox waitScreen = ((VBox)clientScreen.getChildren().get(0));
+                if(waitScreen.getChildren().contains(backToEnterName)) {
+                    waitScreen.getChildren().remove(backToEnterName);
+                }
+            });
+
+        } else if(args[0].equals("yeschange")) {
+            // allow change name
+            Platform.runLater(() -> {
+                VBox waitScreen = ((VBox)clientScreen.getChildren().get(0));
+                if(waitScreen.getId().equals("wait-screen-client") && backToEnterName != null) {
+                    waitScreen.getChildren().add(backToEnterName);
+                }
             });
         }
     }

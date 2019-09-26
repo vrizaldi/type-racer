@@ -136,6 +136,7 @@ public class ServerController extends FXController {
     public void enterChallenge(ActionEvent actionEvent) {
         // switch to screen where server can enter challenge
         // stop waiting for player
+        broadcast("nochange");  // stops player from changing name
         try {
             this.serverSocket.close();
         } catch (IOException e) {
@@ -168,6 +169,7 @@ public class ServerController extends FXController {
             // create a back button
             Button back = new Button("Back");
             back.setOnAction((e) -> {
+                broadcast("yeschange");
                 this.switchToWaitingRoom();
             });
             serverComps.getChildren().add(back);

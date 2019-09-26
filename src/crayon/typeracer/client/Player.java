@@ -36,9 +36,6 @@ public class Player {
         return this.progress;
     }
 
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
 
     public ImageView getSnail() {
         return this.snail;
